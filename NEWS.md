@@ -7,6 +7,7 @@ User-visible changes worth mentioning.
 ## 2.2.0 - unreleased
 
 - [#611] Allow custom access token generators to be used
+- Adding support OAuth 2.0 JWT Token Flow
 - Moved CHANGELOG to NEWS.md
 
 
