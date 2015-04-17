@@ -12,6 +12,16 @@ module Doorkeeper
             Base64.decode64($1).split(/:/, 2)
           end
         end
+
+        def from_jwt(request)
+          client_id, client_secret = Doorkeeper::OAuth::Helpers::JwtFlowHelper.retrieve_credentials(request.parameters[:assertion])
+
+          if client_id
+            return client_id, client_secret
+          end
+
+          return nil, nil
+        end
       end
     end
   end

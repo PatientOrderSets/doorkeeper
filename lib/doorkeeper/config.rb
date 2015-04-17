@@ -114,6 +114,10 @@ and that your `initialize_models!` method doesn't raise any errors.\n
           '@access_token_generator', access_token_generator
         )
       end
+
+      def jwt_flow_options(jwt_flow_options)
+        @config.instance_variable_set('@jwt_flow_options', jwt_flow_options)
+      end
     end
 
     module Option
@@ -193,6 +197,9 @@ and that your `initialize_models!` method doesn't raise any errors.\n
              warn(I18n.translate('doorkeeper.errors.messages.credential_flow_not_configured'))
              nil
            end)
+
+    option :jwt_flow_options,               default: {secret_key: nil,
+                                                      encryption_method: 'HS256'}
 
     option :skip_authorization,             default: ->(_routes) {}
     option :access_token_expires_in,        default: 7200
