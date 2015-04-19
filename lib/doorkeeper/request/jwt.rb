@@ -1,6 +1,8 @@
 module Doorkeeper
   module Request
     class Jwt
+      GRANT_TYPE = 'urn:ietf:params:oauth:grant-type:jwt-bearer'
+
       def self.build(server)
         new(server.credentials, server)
       end

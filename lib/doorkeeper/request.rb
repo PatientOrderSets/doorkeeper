@@ -4,6 +4,7 @@ require 'doorkeeper/request/code'
 require 'doorkeeper/request/password'
 require 'doorkeeper/request/refresh_token'
 require 'doorkeeper/request/token'
+require 'doorkeeper/request/jwt'
 
 module Doorkeeper
   module Request
@@ -23,8 +24,15 @@ module Doorkeeper
 
     def get_strategy(strategy, available)
       fail Errors::MissingRequestStrategy unless strategy.present?
-      fail NameError unless available.include?(strategy.to_s)
-      "Doorkeeper::Request::#{strategy.to_s.camelize}".constantize
+
+      unescaped_strategy = CGI::unescape(strategy.to_s)
+      fail NameError unless available.include?(unescaped_strategy)
+
+      if unescaped_strategy == Doorkeeper::Request::Jwt::GRANT_TYPE
+        Doorkeeper::Request::Jwt
+      else
+        "Doorkeeper::Request::#{strategy.to_s.camelize}".constantize
+      end
     end
   end
 end
