@@ -113,6 +113,7 @@ en:
         #configuration error messages
         credential_flow_not_configured: 'Resource Owner Password Credentials flow failed due to Doorkeeper.configure.resource_owner_from_credentials being unconfigured.'
         resource_owner_authenticator_not_configured: 'Resource Owner find failed due to Doorkeeper.configure.resource_owner_authenticator being unconfiged.'
+        jwt_flow_not_configured: 'Resource Owner JWT Credentials flow failed due to Doorkeeper.configure.resource_owner_from_jwt being unconfigured.'
 
         # Access grant errors
         unsupported_response_type: 'The authorization server does not support this response type.'
@@ -124,6 +125,9 @@ en:
 
         # Password Access token errors
         invalid_resource_owner: 'The provided resource owner credentials are not valid, or resource owner cannot be found'
+
+        # JWT access token errors
+        invalid_jwt: 'The provided JWT is not valid. Please make sure your iss, sub, exp claims are correct and the token has been signed correctly.'
 
         invalid_token:
           revoked: "The access token was revoked"

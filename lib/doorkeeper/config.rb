@@ -198,9 +198,7 @@ and that your `initialize_models!` method doesn't raise any errors.\n
              nil
            end)
 
-    option :jwt_flow_options,               default: {secret_key: nil,
-                                                      encryption_method: 'HS256'}
-
+    option :resource_owner_from_jwt,        default: "Doorkeeper::OAuth::Helpers::NoOpJwtResourceOwnerService"
     option :skip_authorization,             default: ->(_routes) {}
     option :access_token_expires_in,        default: 7200
     option :custom_access_token_expires_in, default: lambda { |_app| nil }

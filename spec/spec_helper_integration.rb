@@ -16,6 +16,7 @@ require 'generator_spec/test_case'
 require 'timecop'
 require 'database_cleaner'
 require 'pry'
+require 'jwt'
 
 Rails.logger.info "====> Doorkeeper.orm = #{Doorkeeper.configuration.orm.inspect}"
 if Doorkeeper.configuration.orm == :active_record
