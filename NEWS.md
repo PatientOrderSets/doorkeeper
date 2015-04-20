@@ -4,10 +4,19 @@ User-visible changes worth mentioning.
 
 ---
 
-## 2.2.0 - unreleased
+## 2.2.1 - unreleased
+
+- [#636] `custom_access_token_expires_in` bugfixes
+
+
+## 2.2.0 - 2015-04-19
 
 - [#611] Allow custom access token generators to be used
+- [#632] Properly fallback to `default_scopes` when no scope is specified
 - Adding support OAuth 2.0 JWT Token Flow
+- [#622] Clarify that there is a logical OR between scopes for authorizing
+- [#635] Upgrade to rspec 3
+- [#627] i18n fallbacks to english
 - Moved CHANGELOG to NEWS.md
 
 

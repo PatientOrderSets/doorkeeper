@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "jwt", "~> 1.4", ">= 1.4.1"
 
   s.add_development_dependency "sqlite3", "~> 1.3.5"
-  s.add_development_dependency "rspec-rails", "~> 2.99.0"
+  s.add_development_dependency "rspec-rails", "~> 3.2.0"
   s.add_development_dependency "capybara", "~> 2.3.0"
   s.add_development_dependency "generator_spec", "~> 0.9.0"
   s.add_development_dependency "factory_girl", "~> 4.5.0"
