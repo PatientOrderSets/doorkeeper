@@ -29,7 +29,9 @@ module Doorkeeper
       def retrieve_resource_owner
         payload = ::Doorkeeper::OAuth::Helpers::JwtFlow.decode(assertion, @client.secret)[0]
 
-        return nil unless payload
+        if !payload
+          return nil
+        end
 
         server.resource_owner_from_jwt.constantize.retrieve(payload)
       end

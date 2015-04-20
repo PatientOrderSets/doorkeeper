@@ -12,6 +12,7 @@ module Doorkeeper::OAuth
         custom_access_token_expires_in: ->(_app) { nil }
       )
     end
+
     let(:client) { FactoryGirl.create(:application) }
     let(:credentials) { Client::Credentials.new(client.uid, client.secret) }
     let(:owner)  { double :owner, id: 99 }

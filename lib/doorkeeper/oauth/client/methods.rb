@@ -15,9 +15,9 @@ module Doorkeeper
 
         def from_jwt(request)
           client_id, client_secret =
-              Doorkeeper::OAuth::Helpers::JwtFlow.retrieve_credentials( request.parameters[:assertion])
+              Doorkeeper::OAuth::Helpers::JwtFlow.retrieve_credentials(request.parameters[:assertion])
 
-          return client_id, client_secret
+          [client_id, client_secret]
         end
       end
     end

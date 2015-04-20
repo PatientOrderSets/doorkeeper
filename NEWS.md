@@ -13,7 +13,6 @@ User-visible changes worth mentioning.
 
 - [#611] Allow custom access token generators to be used
 - [#632] Properly fallback to `default_scopes` when no scope is specified
-- Adding support OAuth 2.0 JWT Token Flow
 - [#622] Clarify that there is a logical OR between scopes for authorizing
 - [#635] Upgrade to rspec 3
 - [#627] i18n fallbacks to english

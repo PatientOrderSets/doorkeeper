@@ -4,28 +4,40 @@ module Doorkeeper
       module JwtFlow
         ERROR_VERIFICATION = 'There was an issue verifying the signature. Please verify the proper values.'
         ERROR_EXPIRED = 'The token has expired. Please regenerate a new one.'
+        ERORR_UNEXPECTED = 'An error has occurred while trying to decode the message'
 
         def self.decode(assertion, secret, verify=true)
+          payload = nil
+          header = nil
+          error = ''
+
           begin
             payload, header = ::JWT.decode(assertion, secret, verify)
-            return payload, header, ''
           rescue ::JWT::VerificationError
-            return nil, nil, ERROR_VERIFICATION
+            error = ERROR_VERIFICATION
           rescue ::JWT::ExpiredSignature
-            return nil, nil, ERROR_EXPIRED
+            error = ERROR_EXPIRED
           rescue ::JWT::DecodeError => e
-            return nil, nil, "An error has occurred while trying to decode the message: #{e}"
+            error =  "An error has occurred while trying to decode the message: #{e}"
           end
+
+          [payload, header, error]
         end
 
         def self.retrieve_credentials(assertion, verify=true)
           payload, header = ::JWT.decode(assertion, nil, false, verify_expiration: false)
+          uid = nil
+          secret = nil
 
-          return nil, nil unless payload
+          if !payload
+            return uid, secret
+          end
 
-          application = Doorkeeper::Application.where(uid: payload["iss"]).first
+          application = Doorkeeper::Application.by_uid(payload["iss"])
 
-          return nil, nil unless application
+          if !application
+            return uid, secret
+          end
 
           uid = application.uid
           secret = application.secret
@@ -33,15 +45,13 @@ module Doorkeeper
           if verify
             begin
               ::JWT.decode(assertion, application.secret)
-              return uid, secret
-            rescue ::JWT::VerificationError
-              return nil, nil
-            rescue ::JWT::ExpiredSignature
-              return nil, nil
+            rescue ::JWT::DecodeError
+              uid = nil
+              secret = nil
             end
           end
 
-          return uid, secret
+           [uid, secret]
         end
       end
     end
