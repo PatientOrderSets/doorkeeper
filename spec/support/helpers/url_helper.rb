@@ -22,6 +22,14 @@ module UrlHelper
     "/oauth/token?#{build_query(parameters)}"
   end
 
+  def jwt_token_endpoint_url(options = {})
+    parameters = {
+        assertion: options[:assertion],
+        grant_type: CGI::escape(Doorkeeper::Request::Jwt::GRANT_TYPE)
+    }
+    "/oauth/token?#{build_query(parameters)}"
+  end
+
   def authorization_endpoint_url(options = {})
     parameters = {
       client_id: options[:client_id]     || options[:client].uid,
