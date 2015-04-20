@@ -23,7 +23,7 @@ module Doorkeeper
 
           return nil, nil unless payload
 
-          application = Doorkeeper::Application.find_by_uid(payload["iss"])
+          application = Doorkeeper::Application.where(uid: payload["iss"]).first
 
           return nil, nil unless application
 
