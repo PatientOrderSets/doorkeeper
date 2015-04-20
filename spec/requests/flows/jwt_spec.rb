@@ -2,7 +2,7 @@ require 'spec_helper_integration'
 
 class TestResourceOwnerService
   def self.retrieve(payload)
-    User.find_by(name: payload['sub'])
+    User.where(name: payload['sub']).first
   end
 end
 
