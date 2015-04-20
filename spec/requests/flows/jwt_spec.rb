@@ -6,13 +6,27 @@ class TestResourceOwnerService
   end
 end
 
-feature 'JWT Credentials Flow' do
-  background do
+describe 'JWT Credentials Flow' do
+  before :each do
     config_is_set(:client_credentials, :from_jwt)
     config_is_set(:grant_flows, [Doorkeeper::Request::Jwt::GRANT_TYPE])
     config_is_set(:resource_owner_from_jwt, "TestResourceOwnerService")
-    client_exists
     create_resource_owner
+    client_exists
+  end
+
+  context 'when the configuration is not setup properly' do
+    before :each do
+      config_is_set(:client_credentials, [:from_params])
+      config_is_set(:grant_flows, [Doorkeeper::Request::Jwt::GRANT_TYPE])
+      config_is_set(:resource_owner_from_jwt, "TestResourceOwnerService")
+    end
+
+    it 'will not issue a token' do
+      expect do
+        post jwt_token_endpoint_url(assertion: @assertion)
+      end.to_not change { Doorkeeper::AccessToken.count }
+    end
   end
 
   context 'with valid user credentials' do
@@ -20,7 +34,7 @@ feature 'JWT Credentials Flow' do
       create_assertion(@client, @resource_owner)
     end
 
-    scenario 'should issue new token' do
+    it 'should issue new token' do
       expect do
         post jwt_token_endpoint_url(assertion: @assertion)
       end.to change { Doorkeeper::AccessToken.count }.by(1)
@@ -30,7 +44,7 @@ feature 'JWT Credentials Flow' do
       should_have_json 'access_token',  token.token
     end
 
-    scenario 'should issue a refresh token if enabled' do
+    it 'should issue a refresh token if enabled' do
       config_is_set(:refresh_token_enabled, true)
 
       post jwt_token_endpoint_url(assertion: @assertion)
@@ -40,20 +54,20 @@ feature 'JWT Credentials Flow' do
       should_have_json 'refresh_token',  token.refresh_token
     end
 
-    scenario 'should return the same token if it is still accessible' do
-      Doorkeeper.configuration.stub(:reuse_access_token).and_return(true)
+    it 'should return the same token if it is still accessible' do
+      expect(Doorkeeper.configuration).to receive(:reuse_access_token).and_return(true)
 
       client_is_authorized(@client, @resource_owner)
 
       post jwt_token_endpoint_url(assertion: @assertion)
 
-      Doorkeeper::AccessToken.count.should be(1)
+      expect(Doorkeeper::AccessToken.count).to eq(1)
       should_have_json 'access_token', Doorkeeper::AccessToken.first.token
     end
   end
 
   context 'with an invalid assertion' do
-    scenario 'should not issue new token with an unknown resource_owner' do
+    it 'should not issue new token with an unknown resource_owner' do
       create_assertion(@client, @resource_owner, {'sub' => 'some dude'})
 
       expect do
@@ -61,7 +75,7 @@ feature 'JWT Credentials Flow' do
       end.to_not change { Doorkeeper::AccessToken.count }
     end
 
-    scenario 'should not issue new token with an invalid iss' do
+    it 'should not issue new token with an invalid iss' do
       create_assertion(@client, @resource_owner, {'iss' => 'unknown'})
 
       expect do
@@ -69,7 +83,7 @@ feature 'JWT Credentials Flow' do
       end.to_not change { Doorkeeper::AccessToken.count }
     end
 
-    scenario 'should not issue new token with expired assertion' do
+    it 'should not issue new token with expired assertion' do
       five_minutes_in_sec = 5 * 60
       create_assertion(@client, @resource_owner, {'exp' => (Time.now - five_minutes_in_sec).to_i})
       expect do
@@ -77,7 +91,7 @@ feature 'JWT Credentials Flow' do
       end.to_not change { Doorkeeper::AccessToken.count }
     end
 
-    scenario 'should not issue new token with expired assertion' do
+    it 'should not issue new token with expired assertion' do
       create_assertion(@client, @resource_owner, {}, 'other_secret')
       expect do
         post jwt_token_endpoint_url(assertion: @assertion)
