@@ -1,3 +1,5 @@
+require 'jwt'
+
 module Doorkeeper
   module OAuth
     module Helpers
