@@ -68,7 +68,7 @@ class Doorkeeper::OAuth::Client
         it 'returns the credentials from the JWT' do
           expected_credentials = [client_id, client_secret]
           allow(Doorkeeper::OAuth::Helpers::JwtFlow).to receive(:retrieve_credentials).
-                                                            with(credentials).and_return(expected_credentials)
+                                                            with(credentials, false).and_return(expected_credentials)
 
           request     = double parameters: {assertion: "#{credentials}"}
           uid, secret = subject.from_jwt(request)
@@ -92,7 +92,7 @@ class Doorkeeper::OAuth::Client
         it 'returns the credentials that are blank' do
           expected_credentials = [nil, nil]
           allow(Doorkeeper::OAuth::Helpers::JwtFlow).to receive(:retrieve_credentials).
-                                                            with(credentials).and_return(expected_credentials)
+                                                            with(credentials, false).and_return(expected_credentials)
 
           request     = double parameters: {assertion: "#{credentials}"}
           uid, secret = subject.from_jwt(request)
